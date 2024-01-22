@@ -80,7 +80,7 @@ class Model(object):
             # at the pytorch documentation
             nn.ReLU(),
             nn.Linear(HSIZE, 2),
-            nn.LogSoftmax(),)
+            nn.LogSoftmax(dim=1))
         else:
             self.model = nn.Sequential(
             nn.Linear(ISIZE, HSIZE),
@@ -88,7 +88,7 @@ class Model(object):
             # at the pytorch documentation
             nn.ReLU(),
             nn.Linear(HSIZE, 2),
-            nn.LogSoftmax(), )
+            nn.LogSoftmax(dim=1))
         
 
     def prepare_datasets(self):
@@ -217,7 +217,7 @@ class Model(object):
             tr_epochs = TR
         """
         loss_function = nn.BCELoss()
-        optimizer = torch.optim.Adam(self.parameters(), self.lr)
+        optimizer = torch.optim.Adam(self.model.parameters(), self.lr)
 
         if self.datarep == "GLOVE":
             tr_epochs = 10
