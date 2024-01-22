@@ -80,7 +80,7 @@ class Model(object):
             # at the pytorch documentation
             nn.ReLU(),
             nn.Linear(HSIZE, 2),
-            nn.LogSoftmax(), )
+            nn.LogSoftmax(dim=1), )
         else:
             ISIZE = len(self.vocab)
             self.model = nn.Sequential(
@@ -89,7 +89,7 @@ class Model(object):
             # at the pytorch documentation
             nn.ReLU(),
             nn.Linear(HSIZE, 2),
-            nn.LogSoftmax(), )
+            nn.LogSoftmax(dim=1), )
         
 
     def prepare_datasets(self):
