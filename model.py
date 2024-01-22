@@ -70,10 +70,10 @@ class Model(object):
         to change the input representation created in prepare_datasets(), to raise the accuracy.
         """
 
-        ISIZE = self.embed_size
         HSIZE = self.hidden_size
 
         if self.datarep == "GLOVE":
+            ISIZE = self.embed_size
             self.model = nn.Sequential(
             nn.Linear(ISIZE, HSIZE),
             # TODO insert a line for the activation function; you will need to look
@@ -82,6 +82,7 @@ class Model(object):
             nn.Linear(HSIZE, 2),
             nn.LogSoftmax(), )
         else:
+            ISIZE = len(self.vocab)
             self.model = nn.Sequential(
             nn.Linear(ISIZE, HSIZE),
             # TODO insert a line for the activation function; you will need to look
