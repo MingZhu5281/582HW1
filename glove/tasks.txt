@@ -1,0 +1,54 @@
+-Task 0
+
+Installing NLTK Data:
+
+import nltk
+# Download the required NLTK data
+nltk.download('stopwords')
+nltk.download('punkt')
+
+DATASET:
+For each text type (<type> = ‘movies’ or
+‘jewelry’), the subfolder contains two *csv files, one for training (<type>_train.csv) and one for
+testing (<type>_test.csv). Each row of the *csv files has two fields: a one-character boolean
+field for the sentiment class (‘1’ for positive and ‘0’ for negative), followed by the text of the
+document. 
+
+-Task 1
+
+1)model constructor
+The Text Classification model constructor
+Try ReLU first, And then experiment with others like nn.Tanh(), nn.LeakyReLU(), or nn.ELU() to see which one gives you the best performance on your validation dataset.
+2)functions to load the GLOVE vectors
+./glove/glove.6B.100d.txt
+Each file has 400K rows, where each row starts with a “word” token (sometimes it is a symbol
+instead of a dictionary word), followed by the glove word vector. 
+3)functions to create BOW and GLOVE word representations
+write a function to convert each review consisting of an array of tokens into a sentence representation vector
+"BOW"
+The first step is to set the size of the vectors. The next step is to create the vectors for your input sentences. Hint: Use numpy to init the vector. Retrieve the BOW vector from self.vocab defined as part of the init for the class, and write a function to create the vector values.
+"GLOVE"
+Hint: Use numpy to init the vector. Retrieve the GLOVE word vectors from the embeddings_dict created by the load_glove(path) function.
+!Your task is to write a function that converts a
+movie review into a vector representation. Therefore you need to decide on how you will
+combine the word vectors. A simple method is to retrieve the glove vectors of length N for
+every word in a review, and then average them to create a final vector of length N to
+represent the review. You can do experiments with the different dimensions of GloVe vectors,
+and different ways of combining them. For example, you could try the weighted averaging
+discussed in Arora et al., 2017 and the code that implements this method from the second
+author’s SIF github. (https://github.com/PrincetonML/SIF/blob/master/src/SIF_embedding.py)
+
+-Task 2
+(preprocess data first: python j_data_prepro.py
+experiment with BOW and GLOVE datarep
+with command-line hyper-parameters of the classifier that are defined in the
+run.py file, such as the learning rate, hidden_size, embed_size and alpha
+(See the function
+definition for parse_args() in run.py, which uses the python argparse module to define
+command line arguments (hyper-parameters), for the full set of command-line
+hyper-parameters, such as whether to use non alphabetic words (alpha).
+
+
+-Task 3
+
+
