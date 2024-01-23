@@ -87,7 +87,7 @@ class Model(object):
             nn.Linear(ISIZE, HSIZE),
             # TODO insert a line for the activation function; you will need to look
             # at the pytorch documentation
-            nn.ReLU(),
+            
             nn.Linear(HSIZE, 2),
             nn.LogSoftmax(dim=1), )
         
