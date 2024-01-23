@@ -177,7 +177,8 @@ class Model(object):
             # Increment the position in the vector for each word in the sentence
             for token in sentence:
                 if token in dictionary:
-                    vector[dictionary[token]] += 1
+                    index = dictionary[token][0]  # Get the index of the word
+                    vector[index] += 1  # Increment the count at this index
             # return: BOW representation of the sentence as a numpy array
             return vector
 
