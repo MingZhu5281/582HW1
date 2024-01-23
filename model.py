@@ -87,7 +87,7 @@ class Model(object):
             nn.Linear(ISIZE, HSIZE),
             # TODO insert a line for the activation function; you will need to look
             # at the pytorch documentation
-            
+            nn.ReLU(),
             nn.Linear(HSIZE, 2),
             nn.LogSoftmax(dim=1), )
         
@@ -179,6 +179,7 @@ class Model(object):
                 if token in dictionary:
                     index = dictionary[token][0]  # Get the index of the word
                     vector[index] += 1  # Increment the count at this index
+                    print("BOW s2v used here")
             # return: BOW representation of the sentence as a numpy array
             return vector
 
