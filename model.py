@@ -217,7 +217,7 @@ class Model(object):
         else:
             tr_epochs = TR
         """
-        loss_function = nn.BCELoss()
+        loss_function = nn.CrossEntropyLoss()
         optimizer = torch.optim.Adam(self.model.parameters(), self.lr)
 
         if self.datarep == "GLOVE":
