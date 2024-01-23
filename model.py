@@ -90,7 +90,7 @@ class Model(object):
             nn.Linear(ISIZE, HSIZE),
             # TODO insert a line for the activation function; you will need to look
             # at the pytorch documentation
-            nn.ELU(),
+            nn.ReLU(),
             nn.Linear(HSIZE, 2),
             nn.LogSoftmax(dim=1), )
         else:
@@ -99,7 +99,7 @@ class Model(object):
             nn.Linear(ISIZE, HSIZE),
             # TODO insert a line for the activation function; you will need to look
             # at the pytorch documentation
-            nn.ELU(),
+            nn.ReLU(),
             nn.Linear(HSIZE, 2),
             nn.LogSoftmax(dim=1), )
 
@@ -254,11 +254,16 @@ class Model(object):
                 optimizer.zero_grad()
                 # predict
                 predict = self.model(x)
+
                 # calculate loss
                 loss = loss_function(predict, y)
-                losses.append(loss.data.numpy())
                 loss.backward()
                 optimizer.step()
+
+                # Move the loss to CPU and convert to NumPy for logging or storing
+                loss_cpu = loss.item()  # or loss.cpu().item() if loss.item() gives an error
+                losses.append(loss_cpu)
+
                 # test every 1000 data
                 if i % 1000 == 0:
                     test_losses = []
@@ -274,9 +279,15 @@ class Model(object):
                         right = self.rightness(predict, y)
                         rights.append(right)
                         loss = loss_function(predict, y)
-                        test_losses.append(loss.data.numpy())
 
-                    right_ratio = 1.0 * np.sum([i[0] for i in rights]) / np.sum([i[1] for i in rights])
+                        loss_cpu = loss.item()  # or loss.cpu().item() if loss.item() gives an error
+                        test_losses.append(loss_cpu)
+
+                    # Extract and process the results from 'rights'
+                    right_sums = [r[0].cpu().numpy() if torch.is_tensor(r[0]) else r[0] for r in rights]
+                    total_counts = [r[1] for r in rights]  # Assuming r[1] is always an integer
+
+                    right_ratio = 1.0 * np.sum(right_sums) / np.sum(total_counts)
                     print('At epoch {}: Training loss：{:.2f}, Test loss：{:.2f}, Test Acc: {:.2f}'.format(epoch, np.mean(losses),
                                                                                 np.mean(test_losses), right_ratio))
         print("End Testing/Training")
