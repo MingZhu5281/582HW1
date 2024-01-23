@@ -4,7 +4,6 @@ This py file is a skeleton for the main project components.
 Places that you need to add or modify code are marked as TODO
 """
 
-from mmap import ACCESS_DEFAULT
 import torch
 import torch.nn as nn
 import torch.optim
@@ -30,7 +29,6 @@ def index2word(index, vocab):
         if v[0] == index:
             return w
     return 0
-
 
 
 class Model(object):
@@ -68,8 +66,22 @@ class Model(object):
         of 0.85 for the GLoVe representation, or 0.90 for the BOW representation.  
         You are free to modify the code for self.model, e.g., to add more hidden layers, or 
         to change the input representation created in prepare_datasets(), to raise the accuracy.
-        """
 
+        if self.datarep == "GLOVE":
+            self.model = nn.Sequential(
+            nn.Linear(ISIZE, HSIZE),
+            # TODO insert a line for the activation function; you will need to look
+            # at the pytorch documentation
+            nn.Linear(HSIZE, 2),
+            nn.LogSoftmax(),)
+        else:
+            self.model = nn.Sequential(
+            nn.Linear(ISIZE, HSIZE),
+            # TODO insert a line for the activation function; you will need to look
+            # at the pytorch documentation
+            nn.Linear(HSIZE, 2),
+            nn.LogSoftmax(), )
+        """
         HSIZE = self.hidden_size
 
         if self.datarep == "GLOVE":
@@ -90,7 +102,6 @@ class Model(object):
             nn.ReLU(),
             nn.Linear(HSIZE, 2),
             nn.LogSoftmax(dim=1), )
-        
 
     def prepare_datasets(self):
         """
@@ -151,10 +162,11 @@ class Model(object):
         embeddings_dict created by the load_glove(path) function
 
         # Code:
-        sentence: List of words (tokens) in the sentence.
-        dictionary: Dictionary representing the vocabulary mapping words to indices.
+        if self.datarep == "GLOVE":
+            #TODO
+        else:
+            #TODO
         """
-
         if self.datarep == "GLOVE":
             #TODO
             # Retrieve the GLOVE word vectors from the embeddings_dict
@@ -169,18 +181,15 @@ class Model(object):
                 # If no words in the sentence are in the embeddings_dict, return a zero vector
                 vector = np.zeros(self.embed_size)
             return vector
-
         else:
             #TODO if self.datarep == "BOW"
             # Initialize a zero vector using numpy with size equal to the vocabulary size
             vector = np.zeros(len(dictionary), dtype=int)
-            # Increment the position in the vector for each word in the sentence
-            for token in sentence:
-                if token in dictionary:
-                    index = dictionary[token][0]  # Get the index of the word
-                    vector[index] += 1  # Increment the count at this index
-                    print("BOW s2v used here")
-            # return: BOW representation of the sentence as a numpy array
+            # Increment the position in the vector for each word index in the sentence
+            for index in sentence:
+                if index < len(vector):  # Check to avoid index out of range
+                    vector[index] += 1
+            # Return the BOW representation of the sentence as a numpy array
             return vector
 
     def load_glove(self, path):
@@ -188,7 +197,7 @@ class Model(object):
         Load Glove embeddings dictionary
         """
         """
-        You should load the Glove embeddings from the local glove files - eg "glove.6B.100d", 
+        You should load the Glove embeddings from the local glove files - eg "glove.6B.50d", 
         Use "self.embeddings_dict" to store the glove vector dictionary.
         """
         with open(path, 'r') as f:
