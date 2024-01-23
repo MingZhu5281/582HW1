@@ -90,7 +90,7 @@ class Model(object):
             nn.Linear(ISIZE, HSIZE),
             # TODO insert a line for the activation function; you will need to look
             # at the pytorch documentation
-            nn.ReLU(),
+            nn.ELU(),
             nn.Linear(HSIZE, 2),
             nn.LogSoftmax(dim=1), )
         else:
@@ -99,7 +99,7 @@ class Model(object):
             nn.Linear(ISIZE, HSIZE),
             # TODO insert a line for the activation function; you will need to look
             # at the pytorch documentation
-            nn.ReLU(),
+            nn.ELU(),
             nn.Linear(HSIZE, 2),
             nn.LogSoftmax(dim=1), )
 
@@ -210,6 +210,12 @@ class Model(object):
         return 0
 
     def training(self):
+        # Check for GPU availability
+        device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        print("Using device:", device)
+        # Move the model to the chosen device
+        self.model.to(device)
+
         """
         The training and testing process.
         """
@@ -240,8 +246,11 @@ class Model(object):
             print(epoch)
             for i, data in enumerate(zip(self.traindataset, self.trainlabels)):
                 x, y = data
-                x = torch.tensor(x, requires_grad=True, dtype=torch.float).view(1, -1)
-                y = torch.tensor(np.array([y]), dtype=torch.long)
+
+                # Move data to the device
+                x = torch.tensor(x, dtype=torch.float).view(1, -1).to(device)
+                y = torch.tensor(np.array([y]), dtype=torch.long).to(device)
+
                 optimizer.zero_grad()
                 # predict
                 predict = self.model(x)
@@ -256,8 +265,11 @@ class Model(object):
                     rights = []
                     for j, test in enumerate(zip(self.testdataset, self.testlabels)):
                         x, y = test
-                        x = torch.tensor(x, requires_grad=True, dtype=torch.float).view(1, -1)
-                        y = torch.tensor(np.array([y]), dtype=torch.long)
+
+                        # Move data to the device
+                        x = torch.tensor(x, dtype=torch.float).view(1, -1).to(device)
+                        y = torch.tensor(np.array([y]), dtype=torch.long).to(device)
+
                         predict = self.model(x)
                         right = self.rightness(predict, y)
                         rights.append(right)
